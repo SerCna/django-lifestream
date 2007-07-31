@@ -1,0 +1,55 @@
+==============================
+django-lifestream Installation
+==============================
+
+Requirements
+-------------------
+
+* Django (only tested with 0.97trunk)
+* `dateutil <http://labix.org/python-dateutil>`_
+* cron
+
+Actual Installation
+-------------------
+
+1.	Install the django_lifestream package into your PYTHONPATH using 
+	the bundled setup.py by executing ``python setup.py install``
+	
+2.	Open your project's settings.py and add "django_lifestream" to your
+	apps.
+	
+3.	Now you have to specify some settings for lifestream like the place where
+	the cached stream should be stored and what feeds should be included
+	in this stream. 
+	
+	In the demosite's settings.py at the bottom you can find examples of
+	all the required settings: ::
+		
+		INSTALLED_APPS = (
+		    'django_lifestream',
+		)
+
+
+		LIFESTREAM_DUMP = os.path.join(os.path.dirname(os.path.abspath(__file__)),'lifestream.dump')
+		LIFESTREAM_SOURCES = (
+			{'url':'http://zerokspot.com/feed/',
+				'class':'zerokspot',
+				'content_type':'application/atom+xml'},
+		)
+	
+4.	Now you have to install a cronjob for actually generating the lifestream.
+	For this purpose you use the bundled "django_lifestream" script that
+	should by now be in your PATH.
+	
+	Simply add something like this to your crontab:	::
+		
+		0,30 * * * * /usr/bin/django_lifestream -s 'demosite.settings' -p /path/to/your/projects/parent/directory
+	
+	Depending on your system's configure you will have to adapt the path 
+	given for django_lifestream and the path to your project's parent 
+	directory.
+	
+5.	This should be it. Now every 30 minutes django_lifestream will generate
+	a new lifestream.
+
+	
