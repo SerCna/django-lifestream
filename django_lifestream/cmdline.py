@@ -14,8 +14,6 @@ from django_lifestream import utils
 
 
 LOGGING_FORMAT = '%(asctime)s %(levelname)s %(message)s'
-LOCAL_TIMEZONE = gettz()
-UTC_TIMEZONE = gettz('UTC')
 
 
 def generate_dump(sources=None,dumpfile=None,tmpfile=None,sort=None):
@@ -25,7 +23,12 @@ def generate_dump(sources=None,dumpfile=None,tmpfile=None,sort=None):
 	them into the specified dumpfile
 	"""
 	from django.conf import settings
-	
+	# Handle timezone settings since django doesn't yet does the tzset call.
+	os.environ['TZ']=settings.TIME_ZONE
+	time.tzset()
+	local_timezone = gettz()
+	utc_timezone = gettz('UTC')
+		
 	if not sources:
 		try:
 			sources = settings.LIFESTREAM_SOURCES
@@ -58,13 +61,13 @@ def generate_dump(sources=None,dumpfile=None,tmpfile=None,sort=None):
 			d=e.published_parsed
 		except:
 			d=e.updated_parsed
-		d=datetime.datetime(*(d[:-2]+(UTC_TIMEZONE,)))
+		d=datetime.datetime(*(d[:-2]+(utc_timezone,)))
 		e['_date']=d
 	# Sort according to published_parsed
 	sort_entries(entries)
 	output = []
 	for e in entries:
-		output.append(item_from_entry(e))
+		output.append(item_from_entry(e,local_timezone))
 	fp = open(tmpfile,'wb+')
 	try:
 		dump(output,fp)
@@ -80,7 +83,7 @@ def sort_entries(entries):
 	"""
 	entries.sort(cmp=comparison,reverse=True)
 
-def item_from_entry(entry):
+def item_from_entry(entry,tz):
 	"""
 	Converty a preprocessed entry from feedparser (with some minimal 
 	modifications) into an item dict for storage. Think "Compression" ;)
@@ -89,7 +92,7 @@ def item_from_entry(entry):
 		'class':entry['_class'],
 		'title':entry.title,
 		'link':entry.link,
-		'date':entry['_date'].astimezone(LOCAL_TIMEZONE),
+		'date':entry['_date'].astimezone(tz),
 	}
 
 def comparison(a,b):
