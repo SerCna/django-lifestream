@@ -1,15 +1,1 @@
-{% extends 'base.html' %}
-{% block title %}Lifestream{% endblock %}
-{% block extrahead %}
-	{% for source in sources %}
-	<link rel="alternate" type="{{ source.content_type|escape }}" title="{{ source.class|escape }}" href="{{ source.url|escape }}" />
-	{% endfor %}
-{% endblock %}
-{% block content %}
-	<ul id="lifestream">
-	{% for entry in entries %}
-		<li class="{{ entry.class }}"><a href="{{ entry.link }}">{{ entry.title }}</a>
-			<span class="datetime">{{ entry.date }}</span></li>
-	{% endfor %}
-	</ul>
-{% endblock %}
+{% extends 'django_lifestream/base.html' %}
