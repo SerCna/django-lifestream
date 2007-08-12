@@ -53,4 +53,10 @@ Actual Installation
 5.	This should be it. Now every 30 minutes django_lifestream will generate
 	a new lifestream.
 
-	
+
+How to customize?
+-----------------
+
+To customize, I'd recommend that you override django_lifestream/lifesteam.html
+which should extend "django_lifestream/base.html" instead of overriding
+the base template itself in order to be able to re-use as much as possible.
