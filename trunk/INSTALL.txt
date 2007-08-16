@@ -1,9 +1,9 @@
-==============================
+******************************
 django-lifestream Installation
-==============================
+******************************
 
 Requirements
--------------------
+============
 
 * Django (only tested with 0.97trunk)
 * `dateutil <http://labix.org/python-dateutil>`_
@@ -11,7 +11,7 @@ Requirements
 * cron
 
 Actual Installation
--------------------
+===================
 
 1.	Install the django_lifestream package into your PYTHONPATH using 
 	the bundled setup.py by executing ``python setup.py install``
@@ -54,8 +54,23 @@ Actual Installation
 	a new lifestream.
 
 
-How to customize?
+
+Template tags
+=============
+
+simple_lifestream
 -----------------
+
+django_lifestream also offers an alternative to the approach mentioned above
+allowing you to place this tag wherever you want.
+
+
+
+How to customize?
+=================
+
+Without template tags
+---------------------
 
 To customize, I'd recommend that you override django_lifestream/lifesteam.html
 which should extend "django_lifestream/base.html" instead of overriding
