@@ -1,6 +1,6 @@
 import os
 import os.path
-
+from cPickle import load
 
 def validate_sources(sources):
 	"""
@@ -33,4 +33,13 @@ def get_dump():
 		return settings.LIFESTREAM_DUMP
 	except NameError:
 		return get_default_path()
-	
+		
+def load_entries():
+	fp = open(get_dump(),'rb')
+	try:
+		entries = load(fp)
+	except:
+		entries = []
+	finally:
+		fp.close()
+	return entries
