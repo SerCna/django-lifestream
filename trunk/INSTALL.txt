@@ -75,3 +75,16 @@ Without template tags
 To customize, I'd recommend that you override django_lifestream/lifesteam.html
 which should extend "django_lifestream/base.html" instead of overriding
 the base template itself in order to be able to re-use as much as possible.
+
+
+Only n days
+-----------
+
+If you want to only have the last n days of events in your lifestream, 
+simple add another variable to your settings file:
+
+::
+    
+    LIFESTREAM_MAXDAYS = 7
+    
+This will give you only the events of the last 7 days.
