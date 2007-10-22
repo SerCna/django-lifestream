@@ -25,9 +25,15 @@ def generate_dump(sources=None,dumpfile=None,tmpfile=None,sort=None):
 	from django.conf import settings
 	# Handle timezone settings since django doesn't yet does the tzset call.
 	os.environ['TZ']=settings.TIME_ZONE
+	try:
+	    max_days = settings.LIFESTREAM_MAXDAYS
+	except:
+	    max_days = None
+	    
 	time.tzset()
 	local_timezone = gettz()
 	utc_timezone = gettz('UTC')
+	now = datetime.datetime.utcnow().replace(tzinfo=utc_timezone)
 		
 	if not sources:
 		try:
@@ -63,6 +69,8 @@ def generate_dump(sources=None,dumpfile=None,tmpfile=None,sort=None):
 			d=e.updated_parsed
 		d=datetime.datetime(*(d[:-2]+(utc_timezone,)))
 		e['_date']=d
+	if max_days:
+	    entries = filter(lambda e: (now-e['_date']).days <= max_days, entries)
 	# Sort according to published_parsed
 	sort_entries(entries)
 	output = []
