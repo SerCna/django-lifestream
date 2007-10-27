@@ -9,6 +9,8 @@ from dateutil.tz import gettz
 import time
 import feedparser
 from cPickle import dump, load
+from os.path import basename, dirname
+from os import getcwd
 
 from django_lifestream import utils
 
@@ -150,8 +152,14 @@ def run(argv=None):
 		logging_config['filename']=options.logfile
 	if options.settings_path:
 		os.environ['DJANGO_SETTINGS_MODULE']=options.settings_path
+	else:
+	    logging.warning('Guessing DJANGO_SETTINGS_MODULE')
+	    os.environ['DJANGO_SETTINGS_MODULE']=basename(getcwd())+'.settings'
 	if options.python_path:
 		sys.path.insert(0,options.python_path)
+	else:
+	    logging.warning('Guessing project pythonpath')
+	    sys.path.insert(0, dirname(getcwd()))
 	logging.basicConfig(**logging_config)
 	
 	generate_dump()
