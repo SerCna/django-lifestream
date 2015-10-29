@@ -1,0 +1,1 @@
+django-lifestream is a generic application for the Django framework that lets you combine multiple RSS and Atom feeds into one lifestream-style page.
